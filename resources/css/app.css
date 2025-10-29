@@ -9,3 +9,55 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Custom scrollbar styling */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Masonry Grid Layout */
+.masonry-grid {
+    column-count: 1;
+    column-gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .masonry-grid {
+        column-count: 2;
+        column-gap: 1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .masonry-grid {
+        column-count: 3;
+        column-gap: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .masonry-grid {
+        column-count: 4;
+        column-gap: 1.5rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .masonry-grid {
+        column-count: 5;
+        column-gap: 2rem;
+    }
+}
+
+.masonry-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    display: inline-block;
+    width: 100%;
+}
+
