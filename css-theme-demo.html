@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS-Only Theme Demo - Nexus</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        /* Demo-specific styles */
+        .demo-section {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .demo-card {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+            box-shadow: 0 4px 6px var(--color-shadow);
+        }
+
+        .demo-button {
+            background: var(--color-accent);
+            color: white;
+            border: 1px solid var(--color-accent);
+        }
+
+        .demo-button:hover {
+            background: var(--color-accent-hover);
+        }
+
+        .demo-text-secondary {
+            color: var(--color-text-secondary);
+        }
+
+        .demo-text-tertiary {
+            color: var(--color-text-tertiary);
+        }
+    </style>
+</head>
+<body class="transition-colors duration-300">
+
+    <!-- Navbar -->
+    <x-navbar />
+
+    <!-- Main Content -->
+    <main class="min-h-screen pt-8 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                    CSS-Only Theme System Demo
+                </h1>
+                <p class="text-lg demo-text-secondary max-w-2xl mx-auto">
+                    Demonstrasi sistem tema yang menggunakan CSS murni dengan dukungan untuk mode terang, gelap, dan otomatis
+                </p>
+            </div>
+
+            <!-- Theme Information -->
+            <div class="demo-section rounded-xl p-6 mb-8">
+                <h2 class="text-2xl font-semibold mb-4">Informasi Tema</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="demo-card rounded-lg p-4">
+                        <h3 class="font-semibold mb-2">Tema Saat Ini</h3>
+                        <p class="demo-text-secondary" id="current-theme-display">Loading...</p>
+                    </div>
+                    <div class="demo-card rounded-lg p-4">
+                        <h3 class="font-semibold mb-2">Preferensi Sistem</h3>
+                        <p class="demo-text-secondary" id="system-preference-display">Loading...</p>
+                    </div>
+                    <div class="demo-card rounded-lg p-4">
+                        <h3 class="font-semibold mb-2">Dukungan Browser</h3>
+                        <p class="demo-text-secondary" id="browser-support-display">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme Controls -->
+            <div class="demo-section rounded-xl p-6 mb-8">
+                <h2 class="text-2xl font-semibold mb-4">Kontrol Tema</h2>
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <!-- CSS Theme Toggle (from Navbar) -->
+                    <div class="flex items-center space-x-3">
+                        <span class="demo-text-secondary">Toggle Switch:</span>
+                        <div class="theme-switcher-container">
+                            <input type="checkbox" id="demo-theme-toggle" class="theme-toggle-checkbox" aria-label="Toggle dark mode">
+                            <label for="demo-theme-toggle" class="theme-toggle-container">
+                                <div class="theme-toggle-switch">
+                                    <div class="theme-toggle-slider">
+                                        <div class="theme-toggle-icons">
+                                            <svg class="sun-icon" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <svg class="moon-icon" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Theme Buttons -->
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="setCSSTheme('light')" class="demo-button px-4 py-2 rounded-lg font-medium transition-colors">
+                        🌞 Mode Terang
+                    </button>
+                    <button onclick="setCSSTheme('dark')" class="demo-button px-4 py-2 rounded-lg font-medium transition-colors">
+                        🌙 Mode Gelap
+                    </button>
+                    <button onclick="setCSSTheme('auto')" class="demo-button px-4 py-2 rounded-lg font-medium transition-colors">
+                        🔄 Mode Otomatis
+                    </button>
+                </div>
+
+                <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <p class="text-sm demo-text-secondary">
+                        <strong>Keyboard Shortcut:</strong> Tekan Ctrl+Shift+D (atau Cmd+Shift+D di Mac) untuk toggle tema
+                    </p>
+                </div>
+            </div>
+
+            <!-- CSS Theme Dropdown Demo -->
+            <div class="demo-section rounded-xl p-6 mb-8">
+                <h2 class="text-2xl font-semibold mb-4">Theme Dropdown (CSS-Only)</h2>
+                <p class="demo-text-secondary mb-4">Dropdown tema yang menggunakan CSS murni tanpa JavaScript:</p>
+
+                <!-- Include the CSS Theme Switcher Component -->
+                <x-css-theme-switcher />
+            </div>
+
+            <!-- Visual Elements Demo -->
+            <div class="demo-section rounded-xl p-6 mb-8">
+                <h2 class="text-2xl font-semibold mb-4">Elemen Visual</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Card 1 -->
+                    <div class="demo-card rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-semibold">Performance</h3>
+                                <p class="demo-text-secondary text-sm">CSS-Only Solution</p>
+                            </div>
+                        </div>
+                        <p class="demo-text-tertiary text-sm">
+                            Tidak memerlukan JavaScript untuk fungsi dasar, memastikan performa yang optimal dan kompatibilitas yang luas.
+                        </p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="demo-card rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-semibold">Accessibility</h3>
+                                <p class="demo-text-secondary text-sm">Full A11y Support</p>
+                            </div>
+                        </div>
+                        <p class="demo-text-tertiary text-sm">
+                            Mendukung penuh fitur aksesibilitas termasuk keyboard navigation, screen readers, dan reduced motion.
+                        </p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="demo-card rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-semibold">Customizable</h3>
+                                <p class="demo-text-secondary text-sm">CSS Variables</p>
+                            </div>
+                        </div>
+                        <p class="demo-text-tertiary text-sm">
+                            Menggunakan CSS custom properties untuk memudahkan kustomisasi warna dan gaya sesuai kebutuhan.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Example -->
+            <div class="demo-section rounded-xl p-6">
+                <h2 class="text-2xl font-semibold mb-4">Contoh Implementasi</h2>
+                <div class="bg-gray-900 dark:bg-gray-800 rounded-lg p-6 overflow-x-auto">
+                    <pre class="text-green-400 text-sm"><code><!-- HTML -->
+&lt;input type="checkbox" id="theme-toggle" class="theme-toggle-checkbox"&gt;
+&lt;label for="theme-toggle" class="theme-toggle-container"&gt;
+  &lt;div class="theme-toggle-switch"&gt;
+    &lt;div class="theme-toggle-slider"&gt;
+      &lt;!-- Icons --&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/label&gt;
+
+/* CSS */
+.theme-toggle-checkbox:checked + .theme-toggle-switch .theme-toggle-slider {
+  transform: translateX(22px);
+}
+
+.theme-toggle-checkbox:checked ~ * {
+  color-scheme: dark;
+}</code></pre>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Update theme information displays
+        function updateThemeInfo() {
+            // Current theme
+            const currentTheme = getCurrentTheme();
+            document.getElementById('current-theme-display').textContent =
+                currentTheme === 'dark' ? 'Gelap' : 'Terang';
+
+            // System preference
+            const systemPref = getSystemThemePreference() ? 'Gelap' : 'Terang';
+            document.getElementById('system-preference-display').textContent = systemPref;
+
+            // Browser support
+            const supportsDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').media !== 'not all';
+            document.getElementById('browser-support-display').textContent =
+                supportsDark ? 'Didukung' : 'Tidak Didukung';
+        }
+
+        // Sync demo toggle with main toggle
+        function syncDemoToggle() {
+            const mainToggle = document.getElementById('css-theme-toggle');
+            const demoToggle = document.getElementById('demo-theme-toggle');
+
+            if (mainToggle && demoToggle) {
+                demoToggle.checked = mainToggle.checked;
+
+                demoToggle.addEventListener('change', function(e) {
+                    mainToggle.checked = e.target.checked;
+                    mainToggle.dispatchEvent(new Event('change'));
+                });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateThemeInfo();
+            syncDemoToggle();
+        });
+
+        // Listen for theme changes
+        document.addEventListener('themeChanged', function(event) {
+            updateThemeInfo();
+        });
+
+        // Manual theme setting function
+        function setCSSTheme(theme) {
+            if (theme === 'auto') {
+                // Remove stored preference to use system default
+                localStorage.removeItem('nexus-css-theme');
+                const systemDark = getSystemThemePreference();
+                window.setCSSTheme(systemDark ? 'dark' : 'light');
+            } else {
+                window.setCSSTheme(theme);
+            }
+            updateThemeInfo();
+        }
+    </script>
+</body>
+</html>

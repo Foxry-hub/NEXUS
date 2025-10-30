@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Theme - Nexus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        .theme-toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 0.75rem 1rem;
+            background: white;
+            color: rgb(17 24 39);
+            border-radius: 0.5rem;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            border: 1px solid rgb(229 231 235);
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 9999;
+        }
+        .dark .theme-toast {
+            background: rgb(31 41 55);
+            color: rgb(243 244 246);
+            border-color: rgb(75 85 99);
+        }
+    </style>
+
+    <script>
+        // Immediate theme application
+        (function() {
+            const storedTheme = localStorage.getItem('nexus-theme') || 'auto';
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (storedTheme === 'dark' || (storedTheme === 'auto' && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+
+        window.setTheme = function(theme) {
+            console.log('Setting theme to:', theme);
+
+            const html = document.documentElement;
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            html.classList.remove('dark');
+
+            if (theme === 'dark') {
+                html.classList.add('dark');
+            } else if (theme === 'auto' && prefersDark) {
+                html.classList.add('dark');
+            }
+
+            localStorage.setItem('nexus-theme', theme);
+            updateThemeUI(theme);
+            showToast(theme);
+        };
+
+        function updateThemeUI(theme) {
+            const icons = ['light-icon', 'dark-icon', 'auto-icon'];
+            const checks = ['light-check', 'dark-check', 'auto-check'];
+
+            icons.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            checks.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            const themeLabel = document.getElementById('current-theme-label');
+            let labelText = 'Tema';
+
+            switch (theme) {
+                case 'light':
+                    document.getElementById('light-icon')?.classList.remove('hidden');
+                    document.getElementById('light-check')?.classList.remove('hidden');
+                    labelText = 'Terang';
+                    break;
+                case 'dark':
+                    document.getElementById('dark-icon')?.classList.remove('hidden');
+                    document.getElementById('dark-check')?.classList.remove('hidden');
+                    labelText = 'Gelap';
+                    break;
+                case 'auto':
+                    document.getElementById('auto-icon')?.classList.remove('hidden');
+                    document.getElementById('auto-check')?.classList.remove('hidden');
+                    labelText = 'Otomatis';
+                    break;
+            }
+
+            if (themeLabel) themeLabel.textContent = labelText;
+        }
+
+        function showToast(theme) {
+            const messages = {
+                light: 'Tema terang diaktifkan',
+                dark: 'Tema gelap diaktifkan',
+                auto: 'Tema otomatis diaktifkan'
+            };
+
+            let toast = document.getElementById('theme-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'theme-toast';
+                toast.className = 'theme-toast';
+                document.body.appendChild(toast);
+            }
+
+            toast.textContent = messages[theme];
+            toast.style.transform = 'translateY(0)';
+            toast.style.opacity = '1';
+
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100%)';
+                toast.style.opacity = '0';
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = localStorage.getItem('nexus-theme') || 'auto';
+            updateThemeUI(currentTheme);
+        });
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-center">Test Theme Switcher</h1>
+
+        <!-- Theme Switcher -->
+        <div class="max-w-md mx-auto mb-8">
+            <div class="relative" x-data="{ open: false }">
+                <button
+                    @click="open = !open"
+                    @click.away="open = false"
+                    class="flex items-center justify-between w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                    <div class="flex items-center space-x-3">
+                        <!-- Icons -->
+                        <svg id="light-icon" class="hidden w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                        </svg>
+
+                        <svg id="dark-icon" class="hidden w-5 h-5 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+
+                        <svg id="auto-icon" class="hidden w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+
+                        <span id="current-theme-label" class="font-medium">Tema</span>
+                    </div>
+
+                    <svg class="w-5 h-5 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <!-- Dropdown -->
+                <div
+                    x-show="open"
+                    x-transition
+                    class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50"
+                    style="display: none;"
+                >
+                    <button
+                        onclick="window.setTheme('light'); document.querySelector('[x-data]').__x.$data.open = false;"
+                        class="flex items-center justify-between w-full px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Mode Terang</span>
+                        </div>
+                        <svg id="light-check" class="w-5 h-5 text-green-500 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+
+                    <button
+                        onclick="window.setTheme('dark'); document.querySelector('[x-data]').__x.$data.open = false;"
+                        class="flex items-center justify-between w-full px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                            <span>Mode Gelap</span>
+                        </div>
+                        <svg id="dark-check" class="w-5 h-5 text-green-500 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+
+                    <button
+                        onclick="window.setTheme('auto'); document.querySelector('[x-data]').__x.$data.open = false;"
+                        class="flex items-center justify-between w-full px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-b-lg"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            <span>Mode Otomatis</span>
+                        </div>
+                        <svg id="auto-check" class="w-5 h-5 text-green-500 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Content -->
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+                <h2 class="text-xl font-semibold mb-4">Test Konten</h2>
+                <p class="text-gray-600 dark:text-gray-300 mb-4">
+                    Ini adalah konten test untuk melihat perubahan tema. Background dan text harus berubah sesuai dengan tema yang dipilih.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+                        <h3 class="font-medium mb-2">Card 1</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">Konten card pertama</p>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+                        <h3 class="font-medium mb-2">Card 2</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">Konten card kedua</p>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex gap-3">
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                        Button Primary
+                    </button>
+                    <button class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-100 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
+                        Button Secondary
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Test Buttons -->
+        <div class="max-w-md mx-auto mt-8 text-center">
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Quick Test:</p>
+            <div class="flex gap-2 justify-center">
+                <button onclick="window.setTheme('light')" class="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded">Light</button>
+                <button onclick="window.setTheme('dark')" class="px-3 py-1 text-sm bg-gray-700 text-white rounded">Dark</button>
+                <button onclick="window.setTheme('auto')" class="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded">Auto</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
