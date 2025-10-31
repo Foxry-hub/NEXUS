@@ -30,7 +30,15 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('home'))->with('success', 'Login berhasil!');
+
+            $user = Auth::user();
+
+            // Redirect based on user role
+            if ($user->isAdmin()) {
+                return redirect()->route('admin.dashboard')->with('success', 'Selamat datang Admin!');
+            } else {
+                return redirect()->route('user.dashboard')->with('success', 'Login berhasil!');
+            }
         }
 
         return back()->withErrors([
@@ -65,11 +73,12 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user', // Default role is user
         ]);
 
         Auth::login($user);
 
-        return redirect(route('home'))->with('success', 'Registrasi berhasil! Selamat datang di Nexus.');
+        return redirect()->route('user.dashboard')->with('success', 'Registrasi berhasil! Selamat datang di Nexus.');
     }
 
     /**
